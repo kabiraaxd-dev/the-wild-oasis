@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const sizes = {
+/* const sizes = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -46,4 +46,21 @@ const variations = {
       background-color: var(--color-red-800);
     }
   `,
-};
+}; */
+
+const Button = styled.button`
+  font-size: 16px;
+  border: 0 none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: blueviolet;
+  color: white;
+  cursor: pointer;
+  ${(props) =>
+    props.variant === "secondary" &&
+    css`
+      background: var(--color-grey-300);
+      color: var(--color-grey-800);
+    `}
+`;
+export default Button;
