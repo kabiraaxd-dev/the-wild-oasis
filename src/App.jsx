@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-    <GlobalStyles />
+      <GlobalStyles />
       <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>

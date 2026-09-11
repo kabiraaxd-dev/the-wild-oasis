@@ -88,6 +88,8 @@ const GlobalStyles = createGlobalStyle`
 
 html {
   font-size: 62.5%;
+  padding: 0;
+  margin: 0;
 }
 
 body {
@@ -98,6 +100,8 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   font-size: 1.6rem;
+  padding: 0;
+  margin: 0;
 }
 
 input,
