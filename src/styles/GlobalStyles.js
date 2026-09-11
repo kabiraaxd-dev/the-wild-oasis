@@ -49,9 +49,15 @@ const GlobalStyles = createGlobalStyle`
   --color-indigo-100: #e0e7ff;
   --color-indigo-700: #4338ca;
 
-  --color-red-100: #fee2e2;
-  --color-red-700: #b91c1c;
-  --color-red-800: #991b1b;
+  --color-red-100: #ebd1d1;
+  --color-red-200: #e0bbbb;
+  --color-red-300: #eba6a6;
+  --color-red-400: #e79090;
+  --color-red-500: #e27a7a;
+  --color-red-600: #dd6464; 
+  --color-red-700: #d84d4d;
+  --color-red-800: #d33737;
+  --color-red-900: #ce2121;
 
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
@@ -195,5 +201,5 @@ FOR DARK MODE
 --image-grayscale: 10%;
 --image-opacity: 90%;
 */
-`
+`;
 export default GlobalStyles 

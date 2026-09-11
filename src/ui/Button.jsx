@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-/* const sizes = {
+const sizes = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -20,7 +20,7 @@ import styled, { css } from "styled-components";
   `,
 };
 
-const variations = {
+const variants = {
   primary: css`
     color: var(--color-brand-50);
     background-color: var(--color-brand-600);
@@ -46,21 +46,12 @@ const variations = {
       background-color: var(--color-red-800);
     }
   `,
-}; */
+};
 
 const Button = styled.button`
-  font-size: 16px;
   border: 0 none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: blueviolet;
-  color: white;
-  cursor: pointer;
-  ${(props) =>
-    props.variant === "secondary" &&
-    css`
-      background: var(--color-grey-300);
-      color: var(--color-grey-800);
-    `}
+  cursor: pointer;border-radius: 0.5rem;
+  ${props => sizes[props.size || "medium"]}
+  ${props => variants[props.variant || "primary"]}
 `;
 export default Button;
