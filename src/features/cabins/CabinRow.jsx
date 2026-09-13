@@ -1,4 +1,9 @@
+import PropTypes from "prop-types";
 import styled from "styled-components";
+import Button from "../../ui/Button"
+import { formatCurrency } from "../../utils/helpers.js";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCabin } from "../../services/apiCabins.js";
 
 const TableRow = styled.div`
   display: grid;
@@ -14,7 +19,7 @@ const TableRow = styled.div`
 
 const Img = styled.img`
   display: block;
-  width: 6.4rem;
+  width: 5rem;
   aspect-ratio: 3 / 2;
   object-fit: cover;
   object-position: center;
@@ -38,3 +43,46 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+
+function CabinRow({ cabin }) {
+  const { id, name, image, maxCapacity, regularPrice, discount } =
+  cabin;
+
+  const queryClient = useQueryClient();
+
+  const {isLoading, mutate} = useMutation({
+    mutationFn: deleteCabin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"]
+      })
+    }
+  })
+
+  return (
+    <TableRow role="row">
+      <Img src={image} alt={name} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} people</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      <Discount>{discount}%</Discount>
+      <Button variant="danger" size="small" onClick={() => mutate(id)} disabled={isLoading}>
+        Delete cabin {id}
+      </Button>
+    </TableRow>
+  );
+}
+
+CabinRow.propTypes = {
+  cabin: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    // description: PropTypes.string.isRequired,
+    maxCapacity: PropTypes.number.isRequired,
+    regularPrice: PropTypes.number.isRequired,
+    discount: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+export default CabinRow;

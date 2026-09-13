@@ -39,11 +39,12 @@ const variants = {
     }
   `,
   danger: css`
-    color: var(--color-red-100);
-    background-color: var(--color-red-700);
+    color: var(--color-red-100, #e0bbbb);
+    background-color: var(--color-red-700, #b00020);
 
     &:hover {
-      background-color: var(--color-red-800);
+      background-color: var(--color-red-800, #d33737);
+      color: white;
     }
   `,
 };

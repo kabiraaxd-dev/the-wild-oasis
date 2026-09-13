@@ -6,11 +6,12 @@ const Row = styled.div`
   padding: 1rem 0;
   ${props => props.type === "horizontal" && css`
     flex-direction: row;
-    gap: 1rem;  
   `}
   ${props => props.type === "vertical" && css`
     flex-direction: column;
-    gap: 1rem;
+  `}
+  ${props => props.gap && css`
+    gap: ${props.gap};
   `}
 `;
 
