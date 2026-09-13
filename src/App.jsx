@@ -13,7 +13,9 @@ import Login from "./pages/Login.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import GlobalStyles from "styled-components";
+import GlobalStyles from "./styles/GlobalStyles";
+import { Toaster } from "react-hot-toast";
+// import { BiFontSize } from "react-icons/bi";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,7 +46,7 @@ function App() {
         <Route path="*" element={<PageNotFound/>} />
       </Routes>
       </BrowserRouter>
-
+      <Toaster position="top-center" gutter={15} containerStyle={{margin: "8px"}} toastOptions={{ duration: 5000, style: { BiFontSize: "16px", maxwidth: "400px", padding: "16px", backgroundColor: "var(--color-grey-400, #9ca3af)", color: "var(--color-grey-800, #1f2937)" } }} />
     </QueryClientProvider>
   );
 }

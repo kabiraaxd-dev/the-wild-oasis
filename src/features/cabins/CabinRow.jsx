@@ -4,6 +4,7 @@ import Button from "../../ui/Button"
 import { formatCurrency } from "../../utils/helpers.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins.js";
+import toast from "react-hot-toast";
 
 const TableRow = styled.div`
   display: grid;
@@ -53,9 +54,13 @@ function CabinRow({ cabin }) {
   const {isLoading, mutate} = useMutation({
     mutationFn: deleteCabin,
     onSuccess: () => {
+      toast.success("Cabin deleted successfully");
       queryClient.invalidateQueries({
         queryKey: ["cabins"]
       })
+    },
+    onError: (error) => {
+      toast.error(error.message);
     }
   })
 
@@ -66,7 +71,7 @@ function CabinRow({ cabin }) {
       <div>Fits up to {maxCapacity} people</div>
       <Price>{formatCurrency(regularPrice)}</Price>
       <Discount>{discount}%</Discount>
-      <Button variant="danger" size="small" onClick={() => mutate(id)} disabled={isLoading}>
+      <Button variant="danger" onClick={() => mutate(id)} disabled={isLoading}>
         Delete cabin {id}
       </Button>
     </TableRow>
@@ -75,13 +80,13 @@ function CabinRow({ cabin }) {
 
 CabinRow.propTypes = {
   cabin: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    // description: PropTypes.string.isRequired,
     maxCapacity: PropTypes.number.isRequired,
     regularPrice: PropTypes.number.isRequired,
     discount: PropTypes.number.isRequired,
+    // description: PropTypes.string.isRequired,
+    image: PropTypes.string,
   }).isRequired,
 };
 
