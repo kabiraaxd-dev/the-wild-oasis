@@ -12,6 +12,7 @@ const StyledAppLayout = styled.div`
 const Main = styled.main`
     padding: 1rem;
     font-family: 'Poppins', sans-serif;
+    overflow-y: auto;
     `;
 
 function AppLayout() {

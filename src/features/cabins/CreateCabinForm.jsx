@@ -47,7 +47,7 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
-  const {register, handleSubmit, reset} = useForm();
+  const {register, handleSubmit, reset, getValues, formState} = useForm();
 
     const queryClient = useQueryClient();
 
@@ -73,31 +73,71 @@ function CreateCabinForm() {
       toast.success("Cabin created successfully");
     }).catch(error => toast.error(error)); */
   }
+  function onSubmitError(errors) {
+    console.log(errors['discount']);
+  }
+
+  const {errors} = formState;
+  console.log(errors);
+  
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register("name", { required: "This field is required" })} />
-        <Error>Required</Error>
+        <Input
+          type="text"
+          id="name"
+          {...register("name", { required: "This field is required" })}
+        />
+        {errors.name && <Error>{errors.name.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity", { required: "This field is required" })} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          {...register("maxCapacity", {
+            required: "This field is required",
+            min: { value: 1, message: "Value must be at least 1" },
+          })}
+        />
+        {errors.maxCapacity && <Error>{errors.maxCapacity.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice", { required: "This field is required" })} />
+        <Input
+          type="number"
+          id="regularPrice"
+          {...register("regularPrice", {
+            required: "This field is required",
+            min: { value: 0, message: "Value must be at least 0" },
+          })}
+        />
+        {errors.regularPrice && <Error>{errors.regularPrice.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="discount">Discount</Label>
-        <Input type="number" id="discount" defaultValue={0} {...register("discount", { required: "This field is required" })} />
+        <Input
+          type="number"
+          id="discount"
+          defaultValue={0}
+          {...register("discount", {
+            required: "This field is required",
+            valueAsNumber: true,
+            deps: ["regularPrice"],
+            validate: (value) =>
+              value < Number(getValues("regularPrice")) ||
+              "Value must be less than regular price",
+          })}
+        />
+        {errors.discount && <Error>{errors.discount.message}</Error>}
       </FormRow>
 
       <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+        <Label htmlFor="description">Description for cabin</Label>
         <Textarea type="text" id="description" {...register("description")} />
       </FormRow>
 
