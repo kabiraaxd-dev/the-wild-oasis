@@ -1,10 +1,13 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Button from "../../ui/Button"
+import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 import { formatCurrency } from "../../utils/helpers.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins.js";
 import toast from "react-hot-toast";
+import CreateCabinForm from "./CreateCabinForm.jsx";
 
 const TableRow = styled.div`
   display: grid;
@@ -48,6 +51,7 @@ const Discount = styled.div`
 function CabinRow({ cabin }) {
   const { id, name, image, maxCapacity, regularPrice, discount } =
   cabin;
+  const [showForm, setShowForm] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -65,16 +69,34 @@ function CabinRow({ cabin }) {
   })
 
   return (
-    <TableRow role="row">
-      <Img src={image} alt={name} />
-      <Cabin>{name}</Cabin>
-      <div>Fits up to {maxCapacity} people</div>
-      <Price>{formatCurrency(regularPrice)}</Price>
-      <Discount>{discount}%</Discount>
-      <Button variant="danger" onClick={() => mutate(id)} disabled={isLoading}>
-        Delete cabin {id}
-      </Button>
-    </TableRow>
+    <>
+      <TableRow role="row">
+        <Img src={image} alt={name} />
+        <Cabin>{name}</Cabin>
+        <div>Fits up to {maxCapacity} people</div>
+        <Price>{formatCurrency(regularPrice)}</Price>
+        <Discount>{discount}%</Discount>
+        <div>
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={() => setShowForm((show) => !show)}
+            disabled={isLoading}
+          >
+            Edit <HiOutlinePencil />
+          </Button>
+          <Button
+            variant="danger"
+            size="small"
+            onClick={() => mutate(id)}
+            disabled={isLoading}
+          >
+            Delete <HiOutlineTrash />
+          </Button>
+        </div>
+      </TableRow>
+      {showForm && <CreateCabinForm cabinEdit={cabin} />}
+    </>
   );
 }
 

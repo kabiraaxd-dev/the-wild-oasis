@@ -2,10 +2,10 @@ import styled, { css } from "styled-components";
 
 const sizes = {
   small: css`
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 1.325rem;
+    padding: 0.6rem 1.2rem;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 400;
     text-align: center;
   `,
   medium: css`

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import PropTypes from "prop-types";
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
@@ -46,8 +46,12 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm() {
-  const {register, handleSubmit, reset, getValues, formState} = useForm();
+function CreateCabinForm({cabinEdit}) {
+  const {id: editId, ...editValues } = cabinEdit || {};
+  const isEditing = Boolean(editId);
+  const {register, handleSubmit, reset, getValues, formState} = useForm({
+    defaultValues: isEditing ? editValues : {}
+  });
 
     const queryClient = useQueryClient();
 
@@ -66,19 +70,16 @@ function CreateCabinForm() {
     });
 
   function onSubmit(data) {
-    console.log(data);
-    mutate(data)
-    /* createCabin(data).then(response => {
-      console.log(response)
-      toast.success("Cabin created successfully");
-    }).catch(error => toast.error(error)); */
+    console.log('submitdata:', data);
+    mutate({...data, image: data.image[0]});
+    
   }
   function onSubmitError(errors) {
-    console.log(errors['discount']);
+    console.log(errors);
   }
 
   const {errors} = formState;
-  console.log(errors);
+  // console.log(errors);
   
   return (
     <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
@@ -141,23 +142,37 @@ function CreateCabinForm() {
         <Textarea type="text" id="description" {...register("description")} />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" {...register("image")} />
-      </FormRow>
+      {!isEditing && (
+        <FormRow>
+          <Label htmlFor="image">Cabin photo</Label>
+          <FileInput id="image" accept="image/*" {...register("image", { required: "This field is required" })} />
+        </FormRow>
+      )}
 
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button variant="secondary" type="reset">
           Cancel
         </Button>
-        {/* <Button variant="primary">Edit cabin</Button> */}
+        
         <Button variant="primary" type="submit" disabled={isLoading}>
-          Create cabin
+          {isEditing ? 'Edit' : 'Create'} cabin
         </Button>
       </FormRow>
     </Form>
   );
 }
+
+CreateCabinForm.propTypes = {
+  cabinEdit: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    maxCapacity: PropTypes.number.isRequired,
+    regularPrice: PropTypes.number.isRequired,
+    discount: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    image: PropTypes.string,
+  }),
+};
 
 export default CreateCabinForm;
