@@ -11,14 +11,11 @@ import CreateCabinForm from "./CreateCabinForm.jsx";
 
 const TableRow = styled.div`
   display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+  grid-template-columns: 0.6fr 0.8fr 1.8fr 1fr 1fr 1fr;
   column-gap: 2.4rem;
   align-items: center;
   padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
+  border-bottom: 1px solid var(--color-grey-200);
 `;
 
 const Img = styled.img`
@@ -48,6 +45,12 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
 function CabinRow({ cabin }) {
   const { id, name, image, maxCapacity, regularPrice, discount } =
   cabin;
@@ -73,10 +76,10 @@ function CabinRow({ cabin }) {
       <TableRow role="row">
         <Img src={image} alt={name} />
         <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity} people</div>
+        <div>Up to <strong>{maxCapacity}</strong> people</div>
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{discount}%</Discount>
-        <div>
+        <Actions>
           <Button
             variant="secondary"
             size="small"
@@ -93,7 +96,7 @@ function CabinRow({ cabin }) {
           >
             Delete <HiOutlineTrash />
           </Button>
-        </div>
+        </Actions>
       </TableRow>
       {showForm && <CreateCabinForm cabinEdit={cabin} />}
     </>

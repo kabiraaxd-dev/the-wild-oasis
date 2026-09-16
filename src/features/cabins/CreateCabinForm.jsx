@@ -6,7 +6,7 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { createCabin } from "../../services/apiCabins";
+import { createUpdateCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -55,19 +55,21 @@ function CreateCabinForm({cabinEdit}) {
 
     const queryClient = useQueryClient();
 
-    const { isLoading, mutate } = useMutation({
-      mutationFn: createCabin,
-      onSuccess: () => {
-        toast.success("Cabin created successfully");
-        queryClient.invalidateQueries({
-          queryKey: ["cabins"],
-        });
-        reset();
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
+    
+      const { isLoading, mutate } = useMutation({
+        mutationFn: createUpdateCabin,
+        onSuccess: () => {
+          toast.success("Cabin created successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["cabins"],
+          });
+          reset();
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      });
+    
 
   function onSubmit(data) {
     console.log('submitdata:', data);
@@ -75,7 +77,7 @@ function CreateCabinForm({cabinEdit}) {
     
   }
   function onSubmitError(errors) {
-    console.log(errors);
+    console.log("submit errors", errors);
   }
 
   const {errors} = formState;
@@ -142,12 +144,12 @@ function CreateCabinForm({cabinEdit}) {
         <Textarea type="text" id="description" {...register("description")} />
       </FormRow>
 
-      {!isEditing && (
+      
         <FormRow>
           <Label htmlFor="image">Cabin photo</Label>
-          <FileInput id="image" accept="image/*" {...register("image", { required: "This field is required" })} />
+          <FileInput id="image" accept="image/*" {...register("image", { required: isEditing ? false : "This field is required" })} />
         </FormRow>
-      )}
+      
 
       <FormRow>
         {/* type is an HTML attribute! */}

@@ -7,7 +7,6 @@ import Spinner from "../../ui/Spinner.jsx";
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
@@ -16,12 +15,12 @@ const Table = styled.div`
 
 const TableHeader = styled.header`
   display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+  grid-template-columns: 0.6fr 0.8fr 1.8fr 1fr 1fr 1fr;
   column-gap: 2.4rem;
   align-items: center;
 
   background-color: var(--color-grey-50);
-  border-bottom: 1px solid var(--color-grey-100);
+  border-bottom: 1px solid var(--color-grey-200);
   text-transform: uppercase;
   letter-spacing: 0.4px;
   font-weight: 600;
@@ -45,6 +44,7 @@ function CabinTable() {
         <div>Capacity</div>
         <div>Price</div>
         <div>Discount</div>
+        <div>Actions</div>
       </TableHeader>
       {isLoading && <Spinner/>}
       {isError && <p>Error: {error.message}</p>}
