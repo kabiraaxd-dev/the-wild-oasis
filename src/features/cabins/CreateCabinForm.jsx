@@ -46,7 +46,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({cabinEdit}) {
+function CreateCabinForm({ cabinEdit }) {
   const {id: editId, ...editValues } = cabinEdit || {};
   const isEditing = Boolean(editId);
   const {register, handleSubmit, reset, getValues, formState} = useForm({
@@ -55,8 +55,7 @@ function CreateCabinForm({cabinEdit}) {
 
     const queryClient = useQueryClient();
 
-    
-      const { isLoading, mutate } = useMutation({
+      const { isLoading, mutate: createCabin } = useMutation({
         mutationFn: createUpdateCabin,
         onSuccess: () => {
           toast.success("Cabin created successfully");
@@ -69,12 +68,28 @@ function CreateCabinForm({cabinEdit}) {
           toast.error(error.message);
         },
       });
-    
+
+      const { isLoading: isUpdating, mutate: updateCabin } = useMutation({
+        mutationFn: ({newCabinData, id}) => createUpdateCabin(newCabinData, id),
+        onSuccess: () => {
+          toast.success("Cabin updated successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["cabins"],
+          });
+          reset();
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      });
 
   function onSubmit(data) {
-    console.log('submitdata:', data);
-    mutate({...data, image: data.image[0]});
-    
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+    if (isEditing) {
+      updateCabin({ newCabinData: {...data, image}, id: editId });
+    } else {
+      createCabin({...data, image});
+    }
   }
   function onSubmitError(errors) {
     console.log("submit errors", errors);
@@ -144,21 +159,25 @@ function CreateCabinForm({cabinEdit}) {
         <Textarea type="text" id="description" {...register("description")} />
       </FormRow>
 
-      
-        <FormRow>
-          <Label htmlFor="image">Cabin photo</Label>
-          <FileInput id="image" accept="image/*" {...register("image", { required: isEditing ? false : "This field is required" })} />
-        </FormRow>
-      
+      <FormRow>
+        <Label htmlFor="image">Cabin photo</Label>
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", {
+            required: isEditing ? false : "This field is required",
+          })}
+        />
+      </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button variant="secondary" type="reset">
           Cancel
         </Button>
-        
-        <Button variant="primary" type="submit" disabled={isLoading}>
-          {isEditing ? 'Edit' : 'Create'} cabin
+
+        <Button variant="primary" type="submit" disabled={isLoading || isUpdating}>
+          {isEditing ? "Edit" : "Create"} cabin {isUpdating && "..."}
         </Button>
       </FormRow>
     </Form>
