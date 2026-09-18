@@ -84,7 +84,18 @@ function CreateCabinForm({ cabinEdit }) {
       });
 
   function onSubmit(data) {
-    const image = typeof data.image === "string" ? data.image : data.image[0];
+    let image = data.image;
+
+    // For an untouched FileInput, react-hook-form returns a FileList (or
+    // null/undefined), not the stored image URL. In that case we must keep the
+    // cabin's existing image instead of overwriting it with an empty value.
+    if (typeof image !== "string") {
+      image = image?.[0];
+
+      // No new file was selected -> keep the current image
+      if (!image && isEditing) image = editValues.image;
+    }
+
     if (isEditing) {
       updateCabin({ newCabinData: {...data, image}, id: editId });
     } else {

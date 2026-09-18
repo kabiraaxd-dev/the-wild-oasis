@@ -4,10 +4,9 @@ import styled from "styled-components";
 import Button from "../../ui/Button"
 import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi2";
 import { formatCurrency } from "../../utils/helpers.js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCabin } from "../../services/apiCabins.js";
-import toast from "react-hot-toast";
+
 import CreateCabinForm from "./CreateCabinForm.jsx";
+import { useDeleteCabin } from "./useDeleteCabin.js";
 
 const TableRow = styled.div`
   display: grid;
@@ -56,7 +55,9 @@ function CabinRow({ cabin }) {
   cabin;
   const [showForm, setShowForm] = useState(false);
 
-  const queryClient = useQueryClient();
+  const { isDeleting, deleteCabin } = useDeleteCabin()
+
+  /* const queryClient = useQueryClient();
 
   const {isLoading, mutate} = useMutation({
     mutationFn: deleteCabin,
@@ -69,7 +70,7 @@ function CabinRow({ cabin }) {
     onError: (error) => {
       toast.error(error.message);
     }
-  })
+  }) */
 
   return (
     <>
@@ -78,21 +79,21 @@ function CabinRow({ cabin }) {
         <Cabin>{name}</Cabin>
         <div>Up to <strong>{maxCapacity}</strong> people</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{discount}%</Discount>
+        {discount ? <Discount>{discount}%</Discount> : <div>-</div>}
         <Actions>
           <Button
             variant="secondary"
             size="small"
             onClick={() => setShowForm((show) => !show)}
-            disabled={isLoading}
+            disabled={isDeleting}
           >
             Edit <HiOutlinePencil />
           </Button>
           <Button
             variant="danger"
             size="small"
-            onClick={() => mutate(id)}
-            disabled={isLoading}
+            onClick={() => deleteCabin(id)}
+            disabled={isDeleting}
           >
             Delete <HiOutlineTrash />
           </Button>
