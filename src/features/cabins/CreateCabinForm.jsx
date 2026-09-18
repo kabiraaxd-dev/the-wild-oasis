@@ -6,9 +6,11 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { createUpdateCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import { createUpdateCabin } from "../../services/apiCabins";
+// import toast from "react-hot-toast";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCreateCabin } from "./useCreateCabin";
+import { useUpdateCabin } from "./useUpdateCabin";
 
 const FormRow = styled.div`
   display: grid;
@@ -53,9 +55,12 @@ function CreateCabinForm({ cabinEdit }) {
     defaultValues: isEditing ? editValues : {}
   });
 
-    const queryClient = useQueryClient();
+  const {isCreating, createCabin} = useCreateCabin();
+  const {isUpdating, updateCabin} = useUpdateCabin();
 
-      const { isLoading, mutate: createCabin } = useMutation({
+    // const queryClient = useQueryClient();
+
+      /* const { isLoading, mutate: createCabin } = useMutation({
         mutationFn: createUpdateCabin,
         onSuccess: () => {
           toast.success("Cabin created successfully");
@@ -67,9 +72,9 @@ function CreateCabinForm({ cabinEdit }) {
         onError: (error) => {
           toast.error(error.message);
         },
-      });
+      }); */
 
-      const { isLoading: isUpdating, mutate: updateCabin } = useMutation({
+      /* const { isLoading: isUpdating, mutate: updateCabin } = useMutation({
         mutationFn: ({newCabinData, id}) => createUpdateCabin(newCabinData, id),
         onSuccess: () => {
           toast.success("Cabin updated successfully");
@@ -81,7 +86,7 @@ function CreateCabinForm({ cabinEdit }) {
         onError: (error) => {
           toast.error(error.message);
         },
-      });
+      }); */
 
   function onSubmit(data) {
     let image = data.image;
@@ -97,9 +102,25 @@ function CreateCabinForm({ cabinEdit }) {
     }
 
     if (isEditing) {
-      updateCabin({ newCabinData: {...data, image}, id: editId });
+      updateCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        {
+          onSuccess: (data) => {
+            console.log(data);
+            reset();
+          },
+        },
+      );
     } else {
-      createCabin({...data, image});
+      createCabin(
+        {...data, image},
+        {
+          onSuccess: (data) => {
+            console.log(data)
+            reset()
+          },
+        }
+      );
     }
   }
   function onSubmitError(errors) {
@@ -187,7 +208,7 @@ function CreateCabinForm({ cabinEdit }) {
           Cancel
         </Button>
 
-        <Button variant="primary" type="submit" disabled={isLoading || isUpdating}>
+        <Button variant="primary" type="submit" disabled={isCreating || isUpdating}>
           {isEditing ? "Edit" : "Create"} cabin {isUpdating && "..."}
         </Button>
       </FormRow>
