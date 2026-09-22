@@ -1,10 +1,10 @@
-import supabase from "./supabase";
+import {supabase} from "./supabase";
 
 export async function getSettings() {
   const { data, error } = await supabase.from("settings").select("*").single();
 
   if (error) {
-    console.error(error);
+    console.error("get setting error",error);
     throw new Error("Settings could not be loaded");
   }
   return data;
