@@ -48,7 +48,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({ cabinEdit }) {
+function CreateCabinForm({ cabinEdit, onCloseModal }) {
   const {id: editId, ...editValues } = cabinEdit || {};
   const isEditing = Boolean(editId);
   const {register, handleSubmit, reset, getValues, formState} = useForm({
@@ -204,7 +204,7 @@ function CreateCabinForm({ cabinEdit }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variant="secondary" type="reset">
+        <Button variant="secondary" type="reset" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
 
@@ -226,6 +226,7 @@ CreateCabinForm.propTypes = {
     description: PropTypes.string.isRequired,
     image: PropTypes.string,
   }),
+  onCloseModal: PropTypes.func,
 };
 
 export default CreateCabinForm;
