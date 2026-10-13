@@ -108,6 +108,7 @@ function CreateCabinForm({ cabinEdit, onCloseModal }) {
           onSuccess: (data) => {
             console.log(data);
             reset();
+            onCloseModal?.();
           },
         },
       );
@@ -118,6 +119,7 @@ function CreateCabinForm({ cabinEdit, onCloseModal }) {
           onSuccess: (data) => {
             console.log(data)
             reset()
+            onCloseModal?.()
           },
         }
       );
@@ -131,7 +133,7 @@ function CreateCabinForm({ cabinEdit, onCloseModal }) {
   // console.log(errors);
   
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
+    <Form onSubmit={handleSubmit(onSubmit, onSubmitError)} type={onCloseModal ? "modal" : "regular"}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input
