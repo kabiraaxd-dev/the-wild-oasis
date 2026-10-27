@@ -4,6 +4,7 @@ import { getCabins } from "../../services/apiCabins.js";
 // import Row from "../../ui/Row.jsx";
 import CabinRow from "./CabinRow.jsx";
 import Spinner from "../../ui/Spinner.jsx";
+import { useSearchParams } from "react-router-dom";
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -33,6 +34,18 @@ function CabinTable() {
     queryKey: ["cabins"],
     queryFn: getCabins,
   });
+  const [searchParams] = useSearchParams();
+  const discountFilter = searchParams.get("discount") || "all";
+  console.log("CabinTable: discountFilter =", discountFilter);
+  const filteredData = data?.filter((cabin) => {
+    if (discountFilter === "with-discount") {
+      return cabin.discount > 0;
+    } 
+    if (discountFilter === "no-discount") {
+      return cabin.discount === 0;
+    }
+    return true; // Show all cabins if no filter is applied
+  });
 
   return (
     <div>
@@ -50,7 +63,7 @@ function CabinTable() {
       {isError && <p>Error: {error.message}</p>}
       {isSuccess && (
         <div>
-          {data.map((cabin) => (
+          {filteredData.map((cabin) => (
             <CabinRow key={cabin.id} cabin={cabin} />
           ))}
         </div>

@@ -6,6 +6,7 @@ import { getCabins } from "../services/apiCabins.js";
 import styled from "styled-components";
 
 import AddCabin from "../features/cabins/AddCabin.jsx";
+import CabinTableOperations from "../features/cabins/CabinTableOperations.jsx";
 
 const Para = styled.p`
   margin-block: 0.25rem;
@@ -13,7 +14,7 @@ const Para = styled.p`
 function Cabins() {
   
   useEffect(() => {
-    getCabins().then(data => console.log(data)).catch(error => console.error(error));
+    getCabins().then(data => console.log(data.length)).catch(error => console.error(error));
   }, []);
   return (
     <>
@@ -22,6 +23,7 @@ function Cabins() {
       <Para >
         List all cabins and perform actions on them.
       </Para>
+      <CabinTableOperations />
     </Row>
     <Row >
       <CabinTable />

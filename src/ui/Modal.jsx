@@ -52,20 +52,23 @@ const Button = styled.button`
   }
 `;
 
-function Modal({children, onClose}){
+function Modal({ children, onClose }) {
   return createPortal(
-    <Overlay>
-      <StyledModal>
-        <Button onClick={onClose}><HiXMark/></Button>
+    <Overlay onClick={onClose}>
+      <StyledModal onClick={(event) => event.stopPropagation()}>
+        <Button onClick={onClose}>
+          <HiXMark />
+        </Button>
         <div>{children}</div>
       </StyledModal>
-    </Overlay>, document.body
-  )
+    </Overlay>,
+    document.body,
+  );
 }
 
 Modal.propTypes = {
   children: PropTypes.node,
-  onClose: PropTypes.func
-}
+  onClose: PropTypes.func.isRequired,
+};
 
 export default Modal;

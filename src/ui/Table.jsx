@@ -58,3 +58,15 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+function Table({ columns, children, footer }) {
+  return (
+    <StyledTable>
+      <StyledHeader columns={columns}>{children[0]}</StyledHeader>
+      <StyledBody>{children.slice(1)}</StyledBody>
+      <Footer>{footer}</Footer>
+    </StyledTable>
+  );
+}
+
+export default Table;
