@@ -36,7 +36,7 @@ function CabinTable() {
   });
   const [searchParams] = useSearchParams();
   const discountFilter = searchParams.get("discount") || "all";
-  console.log("CabinTable: discountFilter =", discountFilter);
+  // console.log("CabinTable: discountFilter =", discountFilter);
   const filteredData = data?.filter((cabin) => {
     if (discountFilter === "with-discount") {
       return cabin.discount > 0;
@@ -45,6 +45,21 @@ function CabinTable() {
       return cabin.discount === 0;
     }
     return true; // Show all cabins if no filter is applied
+  });
+
+  const sortBy = searchParams.get("sortBy") || "startDate-asc";
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedData = filteredData?.slice().sort((a, b) => {
+    if (field === "startDate") {
+      const dateA = new Date(a.startDate);
+      const dateB = new Date(b.startDate);
+      return direction === "asc" ? dateA - dateB : dateB - dateA;
+    }
+    
+      // return direction === "asc" ? a.regularPrice - b.regularPrice : b.regularPrice - a.regularPrice;
+    return a[field] > b[field] ? modifier : -modifier;
+    
   });
 
   return (
@@ -63,7 +78,7 @@ function CabinTable() {
       {isError && <p>Error: {error.message}</p>}
       {isSuccess && (
         <div>
-          {filteredData.map((cabin) => (
+          {sortedData.map((cabin) => (
             <CabinRow key={cabin.id} cabin={cabin} />
           ))}
         </div>
