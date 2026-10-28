@@ -1,6 +1,7 @@
-import styled from "styled-components";
+// import styled from "styled-components";
+import PropTypes from "prop-types";
 
-const StyledMenu = styled.div`
+/* const StyledMenu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -59,4 +60,18 @@ const StyledButton = styled.button`
     color: var(--color-grey-400);
     transition: all 0.3s;
   }
-`;
+`; */
+
+function Menus({ children }) {
+  return (
+    <div>
+      {children}
+    </div>
+  );
+}
+
+Menus.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default Menus;

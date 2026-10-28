@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { format, isToday } from "date-fns";
+import PropTypes from "prop-types";
 
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
@@ -7,12 +8,12 @@ import Table from "../../ui/Table";
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 
-const Cabin = styled.div`
+/* const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
   font-family: "Sono";
-`;
+`; */
 
 const Stacked = styled.div`
   display: flex;
@@ -36,16 +37,16 @@ const Amount = styled.div`
 
 function BookingRow({
   booking: {
-    id: bookingId,
-    created_at,
+    id,
     startDate,
     endDate,
     numNights,
     numGuests,
     totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
+    /* guests: { fullName: guestName, email },
+    cabins: { name: cabinName }, */
+    guestId
   },
 }) {
   const statusToTagName = {
@@ -54,13 +55,26 @@ function BookingRow({
     "checked-out": "silver",
   };
 
+  console.info("BookingRow: ", {
+    id,
+    startDate,
+    endDate,
+    numNights,
+    numGuests,
+    totalPrice,
+    status,
+    guestId
+  });
+
   return (
     <Table.Row>
-      <Cabin>{cabinName}</Cabin>
+      <div>{id}</div>
+      {/* <Cabin>{cabinName}</Cabin> */}
 
       <Stacked>
-        <span>{guestName}</span>
-        <span>{email}</span>
+        <span>{guestId}</span>
+        {/* <span>{guestName}</span> */}
+        {/* <span>{email}</span> */}
       </Stacked>
 
       <Stacked>
@@ -68,7 +82,7 @@ function BookingRow({
           {isToday(new Date(startDate))
             ? "Today"
             : formatDistanceFromNow(startDate)}{" "}
-          &rarr; {numNights} night stay
+          &rarr; {numNights} night stay &middot; {numGuests} guests
         </span>
         <span>
           {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
@@ -82,5 +96,26 @@ function BookingRow({
     </Table.Row>
   );
 }
+
+BookingRow.propTypes = {
+  booking: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    created_at: PropTypes.string.isRequired,
+    startDate: PropTypes.string.isRequired,
+    endDate: PropTypes.string.isRequired,
+    guestId: PropTypes.number.isRequired,
+    numNights: PropTypes.number.isRequired,
+    numGuests: PropTypes.number.isRequired,
+    totalPrice: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+    /* guests: PropTypes.shape({
+      fullName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+    }).isRequired,
+    cabins: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }).isRequired, */
+  }).isRequired,
+};
 
 export default BookingRow;
